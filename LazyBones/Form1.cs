@@ -272,7 +272,7 @@ namespace LazyBones
                 if (_pinggoogle && _pingvpn)
                 {
                     _firstPingLog = true;
-                    StatusLabel.Text = "";
+                    StatusLabel.Text = $"ver. {Application.ProductVersion} © 2022 by tigroff";
                     return true;
                 }
                 else return false;
