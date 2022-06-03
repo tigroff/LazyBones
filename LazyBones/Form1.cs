@@ -131,7 +131,7 @@ namespace LazyBones
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             foreach (DriveInfo d in allDrives)
             {
-                if (d.Name.IndexOf("D:") > 0 && d.IsReady)
+                if (d.Name.IndexOf("D:") == 0 && d.IsReady)
                 {
                     return @"d:\LazyBones.log";
                 }
@@ -139,7 +139,7 @@ namespace LazyBones
 
             foreach (DriveInfo d in allDrives)
             {
-                if (d.Name.IndexOf("C:") > 0 && d.IsReady)
+                if (d.Name.IndexOf("C:") == 0 && d.IsReady)
                 {
                     if (!Directory.Exists(path))
                     {
@@ -167,7 +167,7 @@ namespace LazyBones
             var config = new NLog.Config.LoggingConfiguration();
             var logfile = new NLog.Targets.FileTarget("logfile")
             {
-                FileName = LogFile(),
+                FileName = "d:\\LazyBones.log",
                 Layout = "${date:format=MM-dd-yyyy HH\\:mm\\:ss} - ${level} - ${message}",
                 AutoFlush = true,
                 Encoding = Encoding.GetEncoding("windows-1251")
