@@ -125,6 +125,40 @@ namespace LazyBones
             }
         }
 
+        private string LogFile() 
+        {
+            string path = @"c:\LazyBones";
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            foreach (DriveInfo d in allDrives)
+            {
+                if (d.Name.IndexOf("D:") > 0 && d.IsReady)
+                {
+                    return @"d:\LazyBones.log";
+                }
+            }
+
+            foreach (DriveInfo d in allDrives)
+            {
+                if (d.Name.IndexOf("C:") > 0 && d.IsReady)
+                {
+                    if (!Directory.Exists(path))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        catch (Exception)
+                        {
+                            Logger.Error("Не можливо створити теку для log файлу, використовується тека за замовчуванням.");
+                            return "LazyBones.log";
+                        }
+                    }
+                    return Path.Combine(path, "LazyBones.log");
+                }
+            }
+            return "LazyBones.log";
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             onTimePicker.Enabled = !oncheckBox.Checked;
@@ -133,7 +167,7 @@ namespace LazyBones
             var config = new NLog.Config.LoggingConfiguration();
             var logfile = new NLog.Targets.FileTarget("logfile")
             {
-                FileName = "d:\\LazyBones.log",
+                FileName = LogFile(),
                 Layout = "${date:format=MM-dd-yyyy HH\\:mm\\:ss} - ${level} - ${message}",
                 AutoFlush = true,
                 Encoding = Encoding.GetEncoding("windows-1251")
@@ -249,7 +283,7 @@ namespace LazyBones
             try
             {
                 bool _pinggoogle = false, _pingvpn = false;
-                PingReply reply = pingSender.Send("8.8.8.8", 250);
+                PingReply reply = pingSender.Send("8.8.8.8", 1000);
                 if (reply.Status == IPStatus.Success && reply.RoundtripTime > 0)
                     _pinggoogle = true;
                 else
@@ -259,7 +293,7 @@ namespace LazyBones
                     LogPing();
                 }
 
-                PingReply reply1 = pingSender.Send("193.109.248.251", 250); //193.109.248.251
+                PingReply reply1 = pingSender.Send("193.109.248.251", 1000); //193.109.248.251
                 if (reply.Status == IPStatus.Success && _pinggoogle && reply1.RoundtripTime > 0)
                     _pingvpn = true;
                 else
