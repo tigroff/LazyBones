@@ -73,18 +73,6 @@ namespace LazyBones.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public decimal sleep {
-            get {
-                return ((decimal)(this["sleep"]));
-            }
-            set {
-                this["sleep"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\UTN.rdp")]
         public string rdpPath {
             get {
@@ -152,6 +140,18 @@ namespace LazyBones.Properties {
             }
             set {
                 this["password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool autoconnect {
+            get {
+                return ((bool)(this["autoconnect"]));
+            }
+            set {
+                this["autoconnect"] = value;
             }
         }
     }

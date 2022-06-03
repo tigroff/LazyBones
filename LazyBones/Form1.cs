@@ -1,6 +1,7 @@
 ﻿using LazyBones.Properties;
 using Microsoft.Win32.TaskScheduler;
 using NLog;
+using NLog.Windows.Forms;
 using OtpNet;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,14 @@ namespace LazyBones
     public partial class LazyBones : Form
     {
         //https://1gai.ru/publ/525372-kak-nastroit-avtomaticheskoe-vkljuchenie-kompjutera-na-windows-i-macos.html
+        //OJOKK5XLYHOME4ULM3FCVAXO7Q
         private bool _connected = false;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         bool minimizedToTray;
         private Random _rand = new Random();
-        bool _firstPingLog = true;
-
+        private int _rndMinute;
+        bool _firstPingLog = true, _firstVPNLog = true;
+        private bool _timeToShutdown = false;
 
         protected override void WndProc(ref Message message)
         {
@@ -73,7 +76,7 @@ namespace LazyBones
             form.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
             form.ClientSize = new Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
             form.FormBorderStyle = FormBorderStyle.FixedDialog;
-            form.StartPosition = FormStartPosition.CenterParent;
+            form.StartPosition = FormStartPosition.CenterScreen;
             form.MinimizeBox = false;
             form.MaximizeBox = false;
             form.AcceptButton = buttonOk;
@@ -99,7 +102,7 @@ namespace LazyBones
         {
             try
             {
-                Thread.Sleep(Decimal.ToInt32(sleepTime.Value) * 1000);
+                Thread.Sleep(_rand.Next(2000, 5000));  //Decimal.ToInt32(sleepTime.Value) * 1000);
                 System.Diagnostics.Process.Start("mstsc.exe", Settings.Default.rdpPath);
                 Logger.Info("RDP під'єднано.");
             }
@@ -125,21 +128,14 @@ namespace LazyBones
             }
         }
 
-        private string LogFile() 
+        private string LogFile()
         {
-            string path = @"c:\LazyBones";
+            string path = @"C:\LazyBones";
             DriveInfo[] allDrives = DriveInfo.GetDrives();
-            foreach (DriveInfo d in allDrives)
-            {
-                if (d.Name.IndexOf("D:") == 0 && d.IsReady)
-                {
-                    return @"d:\LazyBones.log";
-                }
-            }
 
             foreach (DriveInfo d in allDrives)
             {
-                if (d.Name.IndexOf("C:") == 0 && d.IsReady)
+                if (d.Name.IndexOf("C:") == 0 && d.IsReady && d.DriveType == DriveType.Fixed)
                 {
                     if (!Directory.Exists(path))
                     {
@@ -161,25 +157,49 @@ namespace LazyBones
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            _rndMinute = _rand.Next(1, 10);
             onTimePicker.Enabled = !oncheckBox.Checked;
             passBox.Enabled = !oncheckBox.Checked;
 
             var config = new NLog.Config.LoggingConfiguration();
             var logfile = new NLog.Targets.FileTarget("logfile")
             {
-                FileName = "d:\\LazyBones.log",
-                Layout = "${date:format=MM-dd-yyyy HH\\:mm\\:ss} - ${level} - ${message}",
+                FileName = LogFile(),
+                Layout = "${date:format=dd-MM-yyyy HH\\:mm\\:ss} - ${level} - ${message}",
                 AutoFlush = true,
-                Encoding = Encoding.GetEncoding("windows-1251")
+                Encoding = Encoding.GetEncoding("windows-1251"),
+                DeleteOldFileOnStartup = true
             };
+
+            RichTextBoxTarget target = new RichTextBoxTarget()
+            {
+                FormName = "LazyBones", // your winform class name
+                ControlName = "rtbLog", // your RichTextBox control/variable name
+                AutoScroll = true,
+                Layout = "${date:format=dd-MM-yyyy HH\\:mm\\:ss} - ${message}",
+                UseDefaultRowColoringRules = false,
+            };
+            
+            target.RowColoringRules.Add
+                (new RichTextBoxRowColoringRule
+                    (
+                        "level >= LogLevel.Warning", // condition
+                        "Red", // font color
+                        "InactiveBorder" // back color
+                    )
+                );
+
+            config.AddTarget("richTextBox", target);
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, target);
             config.AddRule(LogLevel.Info, LogLevel.Fatal, logfile);
             LogManager.Configuration = config;
 
+            OffLogging();
+            Logger.Info($"ver.{Application.ProductVersion} © 2022 by tigroff");
+
             if (Settings.Default.token == String.Empty && CheckToken() == String.Empty)
             {
-                MessageBox.Show("Робота без токена двуфакторної аутентифікації неможлива!\r\n" +
-                "Зверніться до системного адміністратора.", "Помилка");
-                Logger.Error("Не заповнено токен двуфакторної аутентифікації.");
+                Logger.Error("Робота без токена двуфакторної аутентифікації неможлива! Зверніться до системного адміністратора.");
                 Application.Exit();
             }
 
@@ -189,14 +209,13 @@ namespace LazyBones
                 || (Settings.Default.rdpPath == String.Empty))
 
             {
-                Logger.Error("Не заповнені поля для корректного з'єднання.");
-                StatusLabel.Text = "Заповніть всі поля та перезапустіть програму!";
+                Logger.Warn("Не заповнені поля для корректного з'єднання. Заповніть всі поля та перезапустіть програму!");
             }
             else
             {
                 RandomizeTimer();
                 watchDogTimer.Start();
-                StatusLabel.Text = "Чекаємо старту SoftEther.";
+                Logger.Info("Чекаємо на SoftEther.");
             }
         }
 
@@ -219,6 +238,10 @@ namespace LazyBones
             }
             Settings.Default.Save();
             LogManager.Shutdown();
+            if (_timeToShutdown) 
+            {
+                System.Diagnostics.Process.Start("shutdown", "/h /f");
+            }
         }
 
         void MinimizeToTray()
@@ -263,7 +286,7 @@ namespace LazyBones
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            Logger.Info("Автоматичне перепідключення");
+            Logger.Info("Автоматичне перепідключення.");
             timer.Stop();
             if (PingNet())
             {
@@ -282,34 +305,32 @@ namespace LazyBones
             Ping pingSender = new Ping();
             try
             {
-                bool _pinggoogle = false, _pingvpn = false;
+                PingReply reply1 = pingSender.Send("193.109.248.251", 1000); //193.109.248.251
+                if (reply1.Status != IPStatus.Success)
+                {
+                    if (_firstVPNLog)
+                    {
+                        Logger.Warn("Немає зв'язку з VPN сервером.");
+                        _firstVPNLog = false;
+                    }
+                }
+                else _firstVPNLog = true;
+
                 PingReply reply = pingSender.Send("8.8.8.8", 1000);
                 if (reply.Status == IPStatus.Success && reply.RoundtripTime > 0)
-                    _pinggoogle = true;
-                else
-                {
-                    _pinggoogle = false;
-                    StatusLabel.Text = "Немає інтернету.";
-                    LogPing();
-                }
-
-                PingReply reply1 = pingSender.Send("193.109.248.251", 1000); //193.109.248.251
-                if (reply.Status == IPStatus.Success && _pinggoogle && reply1.RoundtripTime > 0)
-                    _pingvpn = true;
-                else
-                {
-                    _pingvpn = false;
-                    StatusLabel.Text = "Немає зв'язку з VPN сервером.";
-                    LogPing();
-                }
-
-                if (_pinggoogle && _pingvpn)
                 {
                     _firstPingLog = true;
-                    StatusLabel.Text = $"ver. {Application.ProductVersion} © 2022 by tigroff";
                     return true;
                 }
-                else return false;
+                else
+                {
+                    if (_firstPingLog)
+                    {
+                        Logger.Warn("Немає інтернету.");
+                        _firstPingLog = false;
+                    }
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -318,20 +339,12 @@ namespace LazyBones
             }
         }
 
-        private void LogPing()
-        {
-            if (_firstPingLog)
-            {
-                Logger.Warn(StatusLabel.Text);
-                _firstPingLog = false;
-            }
-        }
-
         private void watchDogTimer_Tick(object sender, EventArgs e)
         {
             if (Process.GetProcessesByName("vpnclient_x64").Any() || Process.GetProcessesByName("vpnclient").Any()) 
             {
-                if (PingNet())
+                Logger.Info("SoftEther готовий до роботи.");
+                if (PingNet() && connectBox.Checked)
                 {
                     if (!_connected)
                     {
@@ -355,14 +368,14 @@ namespace LazyBones
                 }
             }
 
-            if (((DateTime.Now.Hour >= offTimePicker.Value.Hour && DateTime.Now.Minute >= (offTimePicker.Value.Minute + _rand.Next(1,10))) || 
-                (DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= (45 + _rand.Next(1,10)) && DateTime.Now.DayOfWeek == DayOfWeek.Friday)) && 
+            if (((DateTime.Now.Hour >= offTimePicker.Value.Hour && DateTime.Now.Minute >= (offTimePicker.Value.Minute + _rndMinute)) || 
+                (DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= (45 + _rndMinute) && DateTime.Now.DayOfWeek == DayOfWeek.Friday)) && 
                 (offcheckBox.Checked))
             {
                 timer.Stop();
                 watchDogTimer.Stop();
                 Logger.Info("Автоматичне вимкнення комп'ютера.");
-                System.Diagnostics.Process.Start("shutdown", "/h /f");
+                _timeToShutdown = true;
                 Application.Exit();
             }
         }
@@ -424,6 +437,20 @@ namespace LazyBones
         private void button2_Click(object sender, EventArgs e)
         {
             CheckToken();
+        }
+
+        private void OffLogging() 
+        {
+            if (offcheckBox.Checked)
+                if (DateTime.Now.DayOfWeek == DayOfWeek.Friday)
+                    Logger.Info($"Заплановано вимкнення {DateTime.Now:dd.MM} після 15:{45+_rndMinute}.");
+                else
+                    Logger.Info($"Заплановано вимкнення {DateTime.Now:dd.MM} після {offTimePicker.Value.AddMinutes(_rndMinute):HH:mm}.");
+        }
+        
+        private void offcheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            OffLogging();
         }
     }
 }

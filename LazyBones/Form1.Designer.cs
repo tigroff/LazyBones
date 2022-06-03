@@ -34,33 +34,29 @@
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.watchDogTimer = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label6 = new System.Windows.Forms.Label();
+            this.rtbLog = new System.Windows.Forms.RichTextBox();
+            this.connectBox = new System.Windows.Forms.CheckBox();
+            this.passBox = new System.Windows.Forms.TextBox();
             this.onTimePicker = new System.Windows.Forms.DateTimePicker();
             this.oncheckBox = new System.Windows.Forms.CheckBox();
             this.offTimePicker = new System.Windows.Forms.DateTimePicker();
             this.offcheckBox = new System.Windows.Forms.CheckBox();
             this.ipBox = new System.Windows.Forms.TextBox();
             this.rdpPath = new System.Windows.Forms.TextBox();
-            this.sleepTime = new System.Windows.Forms.NumericUpDown();
             this.vpnBox = new System.Windows.Forms.TextBox();
             this.userBox = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.passBox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sleepTime)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -79,9 +75,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(167, 14);
+            this.button2.Location = new System.Drawing.Point(167, 16);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(64, 23);
+            this.button2.Size = new System.Drawing.Size(64, 21);
             this.button2.TabIndex = 2;
             this.button2.Text = "Токен";
             this.button2.UseVisualStyleBackColor = true;
@@ -105,41 +101,23 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Користувач";
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.StatusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 235);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(243, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 1;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // StatusLabel
-            // 
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(0, 17);
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.ipBox);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.rdpPath);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.sleepTime);
-            this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Location = new System.Drawing.Point(3, 72);
+            this.groupBox2.Location = new System.Drawing.Point(246, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(237, 87);
+            this.groupBox2.Size = new System.Drawing.Size(237, 68);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Параметри RDP з\'єднання";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(204, 61);
+            this.button1.Location = new System.Drawing.Point(204, 40);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(25, 20);
             this.button1.TabIndex = 8;
@@ -150,20 +128,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 64);
+            this.label5.Location = new System.Drawing.Point(7, 43);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 13);
             this.label5.TabIndex = 5;
             this.label5.Text = "RDP-файл";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 41);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(122, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Затримка з\'єднання, с";
             // 
             // label3
             // 
@@ -195,12 +164,53 @@
             // 
             this.openFileDialog.Filter = "RDP файли|*.rdp";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 101);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(132, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Пароль входу в Windows";
+            // 
+            // rtbLog
+            // 
+            this.rtbLog.Location = new System.Drawing.Point(4, 123);
+            this.rtbLog.Name = "rtbLog";
+            this.rtbLog.ReadOnly = true;
+            this.rtbLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtbLog.Size = new System.Drawing.Size(479, 109);
+            this.rtbLog.TabIndex = 15;
+            this.rtbLog.Text = "";
+            // 
+            // connectBox
+            // 
+            this.connectBox.AutoSize = true;
+            this.connectBox.Checked = global::LazyBones.Properties.Settings.Default.autoconnect;
+            this.connectBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "autoconnect", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.connectBox.Location = new System.Drawing.Point(246, 100);
+            this.connectBox.Name = "connectBox";
+            this.connectBox.Size = new System.Drawing.Size(158, 17);
+            this.connectBox.TabIndex = 16;
+            this.connectBox.Text = "Автоматичне підключення";
+            this.connectBox.UseVisualStyleBackColor = true;
+            // 
+            // passBox
+            // 
+            this.passBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "password", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.passBox.Location = new System.Drawing.Point(137, 98);
+            this.passBox.Name = "passBox";
+            this.passBox.Size = new System.Drawing.Size(100, 20);
+            this.passBox.TabIndex = 14;
+            this.passBox.Text = global::LazyBones.Properties.Settings.Default.password;
+            this.passBox.UseSystemPasswordChar = true;
+            // 
             // onTimePicker
             // 
             this.onTimePicker.CustomFormat = "";
             this.onTimePicker.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::LazyBones.Properties.Settings.Default, "onTime", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.onTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.onTimePicker.Location = new System.Drawing.Point(166, 164);
+            this.onTimePicker.Location = new System.Drawing.Point(166, 75);
             this.onTimePicker.Name = "onTimePicker";
             this.onTimePicker.ShowUpDown = true;
             this.onTimePicker.Size = new System.Drawing.Size(71, 20);
@@ -212,7 +222,7 @@
             this.oncheckBox.AutoSize = true;
             this.oncheckBox.Checked = global::LazyBones.Properties.Settings.Default.onFlag;
             this.oncheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "onFlag", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.oncheckBox.Location = new System.Drawing.Point(4, 166);
+            this.oncheckBox.Location = new System.Drawing.Point(7, 77);
             this.oncheckBox.Name = "oncheckBox";
             this.oncheckBox.Size = new System.Drawing.Size(135, 17);
             this.oncheckBox.TabIndex = 9;
@@ -226,7 +236,7 @@
             this.offTimePicker.CustomFormat = "";
             this.offTimePicker.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::LazyBones.Properties.Settings.Default, "offTime", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.offTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.offTimePicker.Location = new System.Drawing.Point(166, 211);
+            this.offTimePicker.Location = new System.Drawing.Point(408, 76);
             this.offTimePicker.Name = "offTimePicker";
             this.offTimePicker.ShowUpDown = true;
             this.offTimePicker.Size = new System.Drawing.Size(71, 20);
@@ -239,13 +249,14 @@
             this.offcheckBox.Checked = global::LazyBones.Properties.Settings.Default.offFlag;
             this.offcheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.offcheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "offFlag", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.offcheckBox.Location = new System.Drawing.Point(4, 213);
+            this.offcheckBox.Location = new System.Drawing.Point(246, 77);
             this.offcheckBox.Name = "offcheckBox";
             this.offcheckBox.Size = new System.Drawing.Size(160, 17);
             this.offcheckBox.TabIndex = 11;
             this.offcheckBox.Text = "Вимкнути комп\'ютер після";
             this.toolTip1.SetToolTip(this.offcheckBox, "Тільки при наявності режиму гібернації!");
             this.offcheckBox.UseVisualStyleBackColor = true;
+            this.offcheckBox.CheckedChanged += new System.EventHandler(this.offcheckBox_CheckedChanged);
             // 
             // ipBox
             // 
@@ -259,35 +270,16 @@
             // rdpPath
             // 
             this.rdpPath.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "rdpPath", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rdpPath.Location = new System.Drawing.Point(69, 61);
+            this.rdpPath.Location = new System.Drawing.Point(70, 40);
             this.rdpPath.Name = "rdpPath";
-            this.rdpPath.Size = new System.Drawing.Size(135, 20);
+            this.rdpPath.Size = new System.Drawing.Size(134, 20);
             this.rdpPath.TabIndex = 7;
             this.rdpPath.Text = global::LazyBones.Properties.Settings.Default.rdpPath;
-            // 
-            // sleepTime
-            // 
-            this.sleepTime.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::LazyBones.Properties.Settings.Default, "sleep", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.sleepTime.Location = new System.Drawing.Point(134, 39);
-            this.sleepTime.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.sleepTime.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.sleepTime.Name = "sleepTime";
-            this.sleepTime.Size = new System.Drawing.Size(94, 20);
-            this.sleepTime.TabIndex = 6;
-            this.sleepTime.Value = global::LazyBones.Properties.Settings.Default.sleep;
             // 
             // vpnBox
             // 
             this.vpnBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "vpnname", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.vpnBox.Location = new System.Drawing.Point(100, 39);
+            this.vpnBox.Location = new System.Drawing.Point(99, 39);
             this.vpnBox.Name = "vpnBox";
             this.vpnBox.Size = new System.Drawing.Size(131, 20);
             this.vpnBox.TabIndex = 3;
@@ -302,30 +294,13 @@
             this.userBox.TabIndex = 1;
             this.userBox.Text = global::LazyBones.Properties.Settings.Default.user;
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(1, 190);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(132, 13);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Пароль входу в Windows";
-            // 
-            // passBox
-            // 
-            this.passBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "password", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.passBox.Location = new System.Drawing.Point(137, 187);
-            this.passBox.Name = "passBox";
-            this.passBox.Size = new System.Drawing.Size(100, 20);
-            this.passBox.TabIndex = 14;
-            this.passBox.Text = global::LazyBones.Properties.Settings.Default.password;
-            this.passBox.UseSystemPasswordChar = true;
-            // 
             // LazyBones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(243, 257);
+            this.ClientSize = new System.Drawing.Size(488, 235);
+            this.Controls.Add(this.connectBox);
+            this.Controls.Add(this.rtbLog);
             this.Controls.Add(this.passBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.onTimePicker);
@@ -333,7 +308,6 @@
             this.Controls.Add(this.offTimePicker);
             this.Controls.Add(this.offcheckBox);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -346,11 +320,8 @@
             this.SizeChanged += new System.EventHandler(this.LazyBones_SizeChanged);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sleepTime)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -363,13 +334,9 @@
         private System.Windows.Forms.TextBox userBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NotifyIcon notifyIcon;
-        private System.Windows.Forms.NumericUpDown sleepTime;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox rdpPath;
         private System.Windows.Forms.Label label5;
@@ -385,6 +352,8 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox passBox;
+        private System.Windows.Forms.RichTextBox rtbLog;
+        private System.Windows.Forms.CheckBox connectBox;
     }
 }
 

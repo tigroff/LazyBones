@@ -70,6 +70,9 @@
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.0.0\lib\net46\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NLog.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.Windows.Forms.4.6.0\lib\net35\NLog.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="Otp.NET, Version=1.2.2.0, Culture=neutral, PublicKeyToken=38a48df817e173a6, processorArchitecture=MSIL">
       <HintPath>..\packages\Otp.NET.1.2.2\lib\net45\Otp.NET.dll</HintPath>
     </Reference>

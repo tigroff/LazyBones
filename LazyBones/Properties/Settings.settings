@@ -14,9 +14,6 @@
     <Setting Name="remoteip" Type="System.String" Scope="User">
       <Value Profile="(Default)">10.5.21.3</Value>
     </Setting>
-    <Setting Name="sleep" Type="System.Decimal" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
     <Setting Name="rdpPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\UTN.rdp</Value>
     </Setting>
@@ -34,6 +31,9 @@
     </Setting>
     <Setting Name="password" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="autoconnect" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
