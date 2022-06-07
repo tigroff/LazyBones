@@ -32,10 +32,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LazyBones));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.vpnBox = new System.Windows.Forms.TextBox();
+            this.userBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ipBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.rdpPath = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -43,18 +47,14 @@
             this.watchDogTimer = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.oncheckBox = new System.Windows.Forms.CheckBox();
+            this.offcheckBox = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.connectBox = new System.Windows.Forms.CheckBox();
             this.passBox = new System.Windows.Forms.TextBox();
             this.onTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.oncheckBox = new System.Windows.Forms.CheckBox();
             this.offTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.offcheckBox = new System.Windows.Forms.CheckBox();
-            this.ipBox = new System.Windows.Forms.TextBox();
-            this.rdpPath = new System.Windows.Forms.TextBox();
-            this.vpnBox = new System.Windows.Forms.TextBox();
-            this.userBox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -82,6 +82,24 @@
             this.button2.Text = "Токен";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // vpnBox
+            // 
+            this.vpnBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "vpnname", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.vpnBox.Location = new System.Drawing.Point(99, 39);
+            this.vpnBox.Name = "vpnBox";
+            this.vpnBox.Size = new System.Drawing.Size(131, 20);
+            this.vpnBox.TabIndex = 3;
+            this.vpnBox.Text = global::LazyBones.Properties.Settings.Default.vpnname;
+            // 
+            // userBox
+            // 
+            this.userBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "user", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.userBox.Location = new System.Drawing.Point(71, 16);
+            this.userBox.Name = "userBox";
+            this.userBox.Size = new System.Drawing.Size(90, 20);
+            this.userBox.TabIndex = 1;
+            this.userBox.Text = global::LazyBones.Properties.Settings.Default.user;
             // 
             // label2
             // 
@@ -115,6 +133,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Параметри RDP з\'єднання";
             // 
+            // ipBox
+            // 
+            this.ipBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "remoteip", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ipBox.Location = new System.Drawing.Point(70, 17);
+            this.ipBox.Name = "ipBox";
+            this.ipBox.Size = new System.Drawing.Size(158, 20);
+            this.ipBox.TabIndex = 5;
+            this.ipBox.Text = global::LazyBones.Properties.Settings.Default.remoteip;
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(204, 40);
@@ -124,6 +151,15 @@
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // rdpPath
+            // 
+            this.rdpPath.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "rdpPath", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.rdpPath.Location = new System.Drawing.Point(70, 40);
+            this.rdpPath.Name = "rdpPath";
+            this.rdpPath.Size = new System.Drawing.Size(134, 20);
+            this.rdpPath.TabIndex = 7;
+            this.rdpPath.Text = global::LazyBones.Properties.Settings.Default.rdpPath;
             // 
             // label5
             // 
@@ -164,6 +200,35 @@
             // 
             this.openFileDialog.Filter = "RDP файли|*.rdp";
             // 
+            // oncheckBox
+            // 
+            this.oncheckBox.AutoSize = true;
+            this.oncheckBox.Checked = global::LazyBones.Properties.Settings.Default.onFlag;
+            this.oncheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "onFlag", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.oncheckBox.Location = new System.Drawing.Point(7, 77);
+            this.oncheckBox.Name = "oncheckBox";
+            this.oncheckBox.Size = new System.Drawing.Size(135, 17);
+            this.oncheckBox.TabIndex = 9;
+            this.oncheckBox.Text = "Вмикати комп\'ютер в";
+            this.toolTip1.SetToolTip(this.oncheckBox, "Тільки з режиму гібернації!");
+            this.oncheckBox.UseVisualStyleBackColor = true;
+            this.oncheckBox.CheckedChanged += new System.EventHandler(this.oncheckBox_CheckedChanged);
+            // 
+            // offcheckBox
+            // 
+            this.offcheckBox.AutoSize = true;
+            this.offcheckBox.Checked = global::LazyBones.Properties.Settings.Default.offFlag;
+            this.offcheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.offcheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "offFlag", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.offcheckBox.Location = new System.Drawing.Point(246, 77);
+            this.offcheckBox.Name = "offcheckBox";
+            this.offcheckBox.Size = new System.Drawing.Size(160, 17);
+            this.offcheckBox.TabIndex = 11;
+            this.offcheckBox.Text = "Вимкнути комп\'ютер після";
+            this.toolTip1.SetToolTip(this.offcheckBox, "Тільки при наявності режиму гібернації!");
+            this.offcheckBox.UseVisualStyleBackColor = true;
+            this.offcheckBox.CheckedChanged += new System.EventHandler(this.offcheckBox_CheckedChanged);
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -194,6 +259,7 @@
             this.connectBox.TabIndex = 16;
             this.connectBox.Text = "Автоматичне підключення";
             this.connectBox.UseVisualStyleBackColor = true;
+            this.connectBox.CheckedChanged += new System.EventHandler(this.connectBox_CheckedChanged);
             // 
             // passBox
             // 
@@ -217,20 +283,6 @@
             this.onTimePicker.TabIndex = 10;
             this.onTimePicker.Value = global::LazyBones.Properties.Settings.Default.onTime;
             // 
-            // oncheckBox
-            // 
-            this.oncheckBox.AutoSize = true;
-            this.oncheckBox.Checked = global::LazyBones.Properties.Settings.Default.onFlag;
-            this.oncheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "onFlag", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.oncheckBox.Location = new System.Drawing.Point(7, 77);
-            this.oncheckBox.Name = "oncheckBox";
-            this.oncheckBox.Size = new System.Drawing.Size(135, 17);
-            this.oncheckBox.TabIndex = 9;
-            this.oncheckBox.Text = "Вмикати комп\'ютер в";
-            this.toolTip1.SetToolTip(this.oncheckBox, "Тільки з режиму гібернації!");
-            this.oncheckBox.UseVisualStyleBackColor = true;
-            this.oncheckBox.CheckedChanged += new System.EventHandler(this.oncheckBox_CheckedChanged);
-            // 
             // offTimePicker
             // 
             this.offTimePicker.CustomFormat = "";
@@ -242,57 +294,6 @@
             this.offTimePicker.Size = new System.Drawing.Size(71, 20);
             this.offTimePicker.TabIndex = 12;
             this.offTimePicker.Value = global::LazyBones.Properties.Settings.Default.offTime;
-            // 
-            // offcheckBox
-            // 
-            this.offcheckBox.AutoSize = true;
-            this.offcheckBox.Checked = global::LazyBones.Properties.Settings.Default.offFlag;
-            this.offcheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.offcheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "offFlag", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.offcheckBox.Location = new System.Drawing.Point(246, 77);
-            this.offcheckBox.Name = "offcheckBox";
-            this.offcheckBox.Size = new System.Drawing.Size(160, 17);
-            this.offcheckBox.TabIndex = 11;
-            this.offcheckBox.Text = "Вимкнути комп\'ютер після";
-            this.toolTip1.SetToolTip(this.offcheckBox, "Тільки при наявності режиму гібернації!");
-            this.offcheckBox.UseVisualStyleBackColor = true;
-            this.offcheckBox.CheckedChanged += new System.EventHandler(this.offcheckBox_CheckedChanged);
-            // 
-            // ipBox
-            // 
-            this.ipBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "remoteip", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ipBox.Location = new System.Drawing.Point(70, 17);
-            this.ipBox.Name = "ipBox";
-            this.ipBox.Size = new System.Drawing.Size(158, 20);
-            this.ipBox.TabIndex = 5;
-            this.ipBox.Text = global::LazyBones.Properties.Settings.Default.remoteip;
-            // 
-            // rdpPath
-            // 
-            this.rdpPath.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "rdpPath", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rdpPath.Location = new System.Drawing.Point(70, 40);
-            this.rdpPath.Name = "rdpPath";
-            this.rdpPath.Size = new System.Drawing.Size(134, 20);
-            this.rdpPath.TabIndex = 7;
-            this.rdpPath.Text = global::LazyBones.Properties.Settings.Default.rdpPath;
-            // 
-            // vpnBox
-            // 
-            this.vpnBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "vpnname", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.vpnBox.Location = new System.Drawing.Point(99, 39);
-            this.vpnBox.Name = "vpnBox";
-            this.vpnBox.Size = new System.Drawing.Size(131, 20);
-            this.vpnBox.TabIndex = 3;
-            this.vpnBox.Text = global::LazyBones.Properties.Settings.Default.vpnname;
-            // 
-            // userBox
-            // 
-            this.userBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "user", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.userBox.Location = new System.Drawing.Point(71, 16);
-            this.userBox.Name = "userBox";
-            this.userBox.Size = new System.Drawing.Size(90, 20);
-            this.userBox.TabIndex = 1;
-            this.userBox.Text = global::LazyBones.Properties.Settings.Default.user;
             // 
             // LazyBones
             // 

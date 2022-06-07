@@ -22,7 +22,6 @@ namespace LazyBones
     public partial class LazyBones : Form
     {
         //https://1gai.ru/publ/525372-kak-nastroit-avtomaticheskoe-vkljuchenie-kompjutera-na-windows-i-macos.html
-        //OJOKK5XLYHOME4ULM3FCVAXO7Q
         private bool _connected = false;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         bool minimizedToTray;
@@ -155,6 +154,21 @@ namespace LazyBones
             return "LazyBones.log";
         }
 
+        private bool AllFieldsIsFull()
+        {
+            if ((Settings.Default.user == String.Empty)
+                || (Settings.Default.vpnname == String.Empty)
+                || (Settings.Default.remoteip == String.Empty)
+                || (Settings.Default.rdpPath == String.Empty))
+
+            {
+                Logger.Warn("Не заповнені поля для корректного з'єднання.");
+                connectBox.Checked = false;
+                return false;
+            }
+            return true;    
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             _rndMinute = _rand.Next(1, 10);
@@ -194,8 +208,8 @@ namespace LazyBones
             config.AddRule(LogLevel.Info, LogLevel.Fatal, logfile);
             LogManager.Configuration = config;
 
-            OffLogging();
             Logger.Info($"ver.{Application.ProductVersion} © 2022 by tigroff");
+            OffLogging();
 
             if (Settings.Default.token == String.Empty && CheckToken() == String.Empty)
             {
@@ -203,19 +217,19 @@ namespace LazyBones
                 Application.Exit();
             }
 
-            if ((Settings.Default.user == String.Empty) 
-                || (Settings.Default.vpnname == String.Empty)
-                || (Settings.Default.remoteip == String.Empty)
-                || (Settings.Default.rdpPath == String.Empty))
+            EnablingControls();
 
-            {
-                Logger.Warn("Не заповнені поля для корректного з'єднання. Заповніть всі поля та перезапустіть програму!");
-            }
-            else
+            if (AllFieldsIsFull())
             {
                 RandomizeTimer();
-                watchDogTimer.Start();
                 Logger.Info("Чекаємо на SoftEther.");
+
+                while (!Process.GetProcessesByName(Environment.Is64BitOperatingSystem ? "vpnclient_x64" : "vpnclient").Any())
+                {
+                    Thread.Sleep(500);
+                }
+                Logger.Info("SoftEther готовий до роботи.");
+                watchDogTimer.Start();
             }
         }
 
@@ -341,31 +355,27 @@ namespace LazyBones
 
         private void watchDogTimer_Tick(object sender, EventArgs e)
         {
-            if (Process.GetProcessesByName("vpnclient_x64").Any() || Process.GetProcessesByName("vpnclient").Any()) 
+            if (PingNet() && connectBox.Checked)
             {
-                Logger.Info("SoftEther готовий до роботи.");
-                if (PingNet() && connectBox.Checked)
+                if (!_connected)
                 {
-                    if (!_connected)
+                    _connected = Vpn.Connect();
+                    RdpConnect();
+                    if (_connected && this.WindowState == FormWindowState.Normal)
                     {
-                        _connected = Vpn.Connect();
-                        RdpConnect();
-                        if (_connected && this.WindowState == FormWindowState.Normal)
-                        {
-                            MinimizeToTray();
-                        }
+                        MinimizeToTray();
                     }
                 }
-                else
+            }
+            else
+            {
+                if (_connected)
                 {
-                    if (_connected)
-                    {
-                        _connected = false;
-                        RdpDisconnect();
-                        Vpn.Disconnect();
-                    }
+                    _connected = false;
+                    RdpDisconnect();
+                    Vpn.Disconnect();
+                }
 
-                }
             }
 
             if (((DateTime.Now.Hour >= offTimePicker.Value.Hour && DateTime.Now.Minute >= (offTimePicker.Value.Minute + _rndMinute)) || 
@@ -447,7 +457,25 @@ namespace LazyBones
                 else
                     Logger.Info($"Заплановано вимкнення {DateTime.Now:dd.MM} після {offTimePicker.Value.AddMinutes(_rndMinute):HH:mm}.");
         }
-        
+
+        private void connectBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (AllFieldsIsFull())
+            {
+                EnablingControls();
+            }
+        }
+
+        private void EnablingControls()
+        {
+            userBox.Enabled = !connectBox.Checked;
+            vpnBox.Enabled = !connectBox.Checked;
+            ipBox.Enabled = !connectBox.Checked;
+            rdpPath.Enabled = !connectBox.Checked;
+            button1.Enabled = !connectBox.Checked;
+            button2.Enabled = !connectBox.Checked;
+        }
+
         private void offcheckBox_CheckedChanged(object sender, EventArgs e)
         {
             OffLogging();
