@@ -91,6 +91,7 @@
             this.vpnBox.Size = new System.Drawing.Size(131, 20);
             this.vpnBox.TabIndex = 3;
             this.vpnBox.Text = global::LazyBones.Properties.Settings.Default.vpnname;
+            this.vpnBox.TextChanged += new System.EventHandler(this.vpnBox_TextChanged);
             // 
             // userBox
             // 
@@ -100,6 +101,7 @@
             this.userBox.Size = new System.Drawing.Size(90, 20);
             this.userBox.TabIndex = 1;
             this.userBox.Text = global::LazyBones.Properties.Settings.Default.user;
+            this.userBox.TextChanged += new System.EventHandler(this.userBox_TextChanged);
             // 
             // label2
             // 
@@ -141,6 +143,8 @@
             this.ipBox.Size = new System.Drawing.Size(158, 20);
             this.ipBox.TabIndex = 5;
             this.ipBox.Text = global::LazyBones.Properties.Settings.Default.remoteip;
+            this.ipBox.TextChanged += new System.EventHandler(this.ipBox_TextChanged);
+            this.ipBox.Leave += new System.EventHandler(this.ipBox_Leave);
             // 
             // button1
             // 
@@ -160,6 +164,7 @@
             this.rdpPath.Size = new System.Drawing.Size(134, 20);
             this.rdpPath.TabIndex = 7;
             this.rdpPath.Text = global::LazyBones.Properties.Settings.Default.rdpPath;
+            this.rdpPath.TextChanged += new System.EventHandler(this.rdpPath_TextChanged);
             // 
             // label5
             // 

@@ -7,11 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Deployment.Application;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +30,7 @@ namespace LazyBones
         bool minimizedToTray;
         private Random _rand = new Random();
         private int _rndMinute;
-        bool _firstPingLog = true, _firstVPNLog = true;
+        bool _firstPingLog = true;
         private bool _timeToShutdown = false;
 
         protected override void WndProc(ref Message message)
@@ -156,16 +159,18 @@ namespace LazyBones
 
         private bool AllFieldsIsFull()
         {
+            IPAddress ip;
             if ((Settings.Default.user == String.Empty)
                 || (Settings.Default.vpnname == String.Empty)
-                || (Settings.Default.remoteip == String.Empty)
+                || ((Settings.Default.remoteip == String.Empty) && IPAddress.TryParse(Settings.Default.remoteip, out ip))
                 || (Settings.Default.rdpPath == String.Empty))
 
             {
                 Logger.Warn("Не заповнені поля для корректного з'єднання.");
-                connectBox.Checked = false;
+                connectBox.Enabled = false;
                 return false;
             }
+            connectBox.Enabled = true;
             return true;    
         }
 
@@ -213,6 +218,7 @@ namespace LazyBones
 
             if (Settings.Default.token == String.Empty && CheckToken() == String.Empty)
             {
+                MessageBox.Show("Робота без токена двуфакторної аутентифікації неможлива! Зверніться до системного адміністратора.","Помилка",MessageBoxButtons.OK);
                 Logger.Error("Робота без токена двуфакторної аутентифікації неможлива! Зверніться до системного адміністратора.");
                 Application.Exit();
             }
@@ -319,17 +325,6 @@ namespace LazyBones
             Ping pingSender = new Ping();
             try
             {
-                PingReply reply1 = pingSender.Send("193.109.248.251", 1000); //193.109.248.251
-                if (reply1.Status != IPStatus.Success)
-                {
-                    if (_firstVPNLog)
-                    {
-                        Logger.Warn("Немає зв'язку з VPN сервером.");
-                        _firstVPNLog = false;
-                    }
-                }
-                else _firstVPNLog = true;
-
                 PingReply reply = pingSender.Send("8.8.8.8", 1000);
                 if (reply.Status == IPStatus.Success && reply.RoundtripTime > 0)
                 {
@@ -342,6 +337,7 @@ namespace LazyBones
                     {
                         Logger.Warn("Немає інтернету.");
                         _firstPingLog = false;
+                        return false;
                     }
                     return false;
                 }
@@ -479,6 +475,40 @@ namespace LazyBones
         private void offcheckBox_CheckedChanged(object sender, EventArgs e)
         {
             OffLogging();
+        }
+
+        private void CheckText(string txt)
+        {
+            connectBox.Enabled = (txt != String.Empty);
+        }
+
+        private void userBox_TextChanged(object sender, EventArgs e)
+        {
+            CheckText(userBox.Text);
+        }
+
+        private void vpnBox_TextChanged(object sender, EventArgs e)
+        {
+            CheckText(vpnBox.Text);
+        }
+
+        private void ipBox_TextChanged(object sender, EventArgs e)
+        {
+            CheckText(ipBox.Text);
+        }
+
+        private void rdpPath_TextChanged(object sender, EventArgs e)
+        {
+            CheckText(rdpPath.Text);    
+        }
+
+        private void ipBox_Leave(object sender, EventArgs e)
+        {
+            IPAddress ip;
+            if (!IPAddress.TryParse(ipBox.Text, out ip)) 
+            {
+                Logger.Error("Введена невірна IP адреса!");
+            }
         }
     }
 }
