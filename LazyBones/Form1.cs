@@ -333,7 +333,22 @@ namespace LazyBones
                 }
                 else
                 {
-                    if (_firstPingLog)
+                    int _pingCount = 0;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        PingReply reply1 = pingSender.Send("8.8.8.8", 1000);
+                        if (reply1.Status == IPStatus.Success && reply1.RoundtripTime > 0)
+                        {
+                            return true;
+                        }
+                        else 
+                        {
+                            _pingCount++;
+                            Thread.Sleep(1000);
+                        }
+                    }
+                    
+                    if (_firstPingLog && _pingCount >= 4)
                     {
                         Logger.Warn("Немає інтернету.");
                         _firstPingLog = false;
@@ -341,6 +356,11 @@ namespace LazyBones
                     }
                     return false;
                 }
+            }
+            catch (PingException)
+            {
+                Logger.Error("Помилка мережевого з'єднання.");
+                return false;
             }
             catch (Exception ex)
             {
@@ -477,29 +497,9 @@ namespace LazyBones
             OffLogging();
         }
 
-        private void CheckText(string txt)
-        {
-            connectBox.Enabled = (txt != String.Empty);
-        }
-
         private void userBox_TextChanged(object sender, EventArgs e)
         {
-            CheckText(userBox.Text);
-        }
-
-        private void vpnBox_TextChanged(object sender, EventArgs e)
-        {
-            CheckText(vpnBox.Text);
-        }
-
-        private void ipBox_TextChanged(object sender, EventArgs e)
-        {
-            CheckText(ipBox.Text);
-        }
-
-        private void rdpPath_TextChanged(object sender, EventArgs e)
-        {
-            CheckText(rdpPath.Text);    
+            connectBox.Enabled = (userBox.Text != String.Empty && vpnBox.Text != String.Empty && ipBox.Text != String.Empty && rdpPath.Text != String.Empty);
         }
 
         private void ipBox_Leave(object sender, EventArgs e)
