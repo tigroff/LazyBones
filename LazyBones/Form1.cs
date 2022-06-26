@@ -25,12 +25,10 @@ namespace LazyBones
     public partial class LazyBones : Form
     {
         //https://1gai.ru/publ/525372-kak-nastroit-avtomaticheskoe-vkljuchenie-kompjutera-na-windows-i-macos.html
-        private bool _connected = false;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         bool minimizedToTray;
         private Random _rand = new Random();
         private int _rndMinute;
-        bool _firstPingLog = true;
         private bool _timeToShutdown = false;
 
         protected override void WndProc(ref Message message)
@@ -100,36 +98,6 @@ namespace LazyBones
             return Settings.Default.token;
         }
 
-        private void RdpConnect()
-        {
-            try
-            {
-                Thread.Sleep(_rand.Next(2000, 5000));  //Decimal.ToInt32(sleepTime.Value) * 1000);
-                System.Diagnostics.Process.Start("mstsc.exe", Settings.Default.rdpPath);
-                Logger.Info("RDP під'єднано.");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
-        }
-
-        private void RdpDisconnect()
-        {
-            try
-            {
-                foreach (Process proc in Process.GetProcessesByName("mstsc"))
-                {
-                    proc.Kill();
-                    Logger.Info("RDP від'єднано.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
-        }
-
         private string LogFile()
         {
             string path = @"C:\LazyBones";
@@ -177,6 +145,7 @@ namespace LazyBones
         private void Form1_Load(object sender, EventArgs e)
         {
             _rndMinute = _rand.Next(1, 10);
+            Vpn.Connected = false;
             onTimePicker.Enabled = !oncheckBox.Checked;
             passBox.Enabled = !oncheckBox.Checked;
 
@@ -227,7 +196,7 @@ namespace LazyBones
 
             if (AllFieldsIsFull())
             {
-                RandomizeTimer();
+                //RandomizeTimer();
                 Logger.Info("Чекаємо на SoftEther.");
 
                 while (!Process.GetProcessesByName(Environment.Is64BitOperatingSystem ? "vpnclient_x64" : "vpnclient").Any())
@@ -236,22 +205,20 @@ namespace LazyBones
                 }
                 Logger.Info("SoftEther готовий до роботи.");
                 watchDogTimer.Start();
+                //timer.Start();
             }
-        }
-
-        private void RandomizeTimer()
-        {
-            timer.Interval = _rand.Next(240, 360) * 10000;
-            Logger.Info($"Наступне перепідключення через {timer.Interval / 60000} хвилин.");
-            timer.Start();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (PingNet())
+            if (CheckForInternetConnection())
             {
-                RdpDisconnect();
-                if (_connected)
+                if (Rdp.Connected)
+                {
+                    Rdp.Disconnect();
+                }
+                
+                if (Vpn.Connected)
                 {
                     Vpn.Disconnect();
                 }
@@ -304,80 +271,30 @@ namespace LazyBones
             rdpPath.Text = openFileDialog.FileName;
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private bool CheckForInternetConnection()
         {
-            Logger.Info("Автоматичне перепідключення.");
-            timer.Stop();
-            if (PingNet())
-            {
-                if (!_connected)
-                {
-                    _connected = Vpn.Connect();
-                }
-                RdpDisconnect();
-                RdpConnect(); 
-            }
-            RandomizeTimer();
-        }
-
-        private bool PingNet()
-        {
-            Ping pingSender = new Ping();
             try
             {
-                PingReply reply = pingSender.Send("8.8.8.8", 1000);
-                if (reply.Status == IPStatus.Success && reply.RoundtripTime > 0)
-                {
-                    _firstPingLog = true;
+                using (var client = new WebClient())
+                using (client.OpenRead("http://google.com/generate_204"))
                     return true;
-                }
-                else
-                {
-                    int _pingCount = 0;
-                    for (int i = 0; i < 5; i++)
-                    {
-                        PingReply reply1 = pingSender.Send("8.8.8.8", 1000);
-                        if (reply1.Status == IPStatus.Success && reply1.RoundtripTime > 0)
-                        {
-                            return true;
-                        }
-                        else 
-                        {
-                            _pingCount++;
-                            Thread.Sleep(1000);
-                        }
-                    }
-                    
-                    if (_firstPingLog && _pingCount >= 4)
-                    {
-                        Logger.Warn("Немає інтернету.");
-                        _firstPingLog = false;
-                        return false;
-                    }
-                    return false;
-                }
             }
-            catch (PingException)
+            catch
             {
-                Logger.Error("Помилка мережевого з'єднання.");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
+                Logger.Warn("Немає інтернету.");
                 return false;
             }
         }
 
         private void watchDogTimer_Tick(object sender, EventArgs e)
         {
-            if (PingNet() && connectBox.Checked)
+            if (CheckForInternetConnection() && connectBox.Checked)
             {
-                if (!_connected)
+                if (!Vpn.Connected)
                 {
-                    _connected = Vpn.Connect();
-                    RdpConnect();
-                    if (_connected && this.WindowState == FormWindowState.Normal)
+                    Vpn.Connect();
+                    Rdp.Connect();
+                    if (Vpn.Connected && this.WindowState == FormWindowState.Normal)
                     {
                         MinimizeToTray();
                     }
@@ -385,24 +302,35 @@ namespace LazyBones
             }
             else
             {
-                if (_connected)
+                if (Vpn.Connected)
                 {
-                    _connected = false;
-                    RdpDisconnect();
+                    Rdp.Disconnect();
                     Vpn.Disconnect();
                 }
-
+            }
+            if (Vpn.Connected && !Rdp.Connected)
+            {
+                Rdp.Connect();
             }
 
+            //todo окно отмены выключения компьютера 
             if (((DateTime.Now.Hour >= offTimePicker.Value.Hour && DateTime.Now.Minute >= (offTimePicker.Value.Minute + _rndMinute)) || 
                 (DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= (45 + _rndMinute) && DateTime.Now.DayOfWeek == DayOfWeek.Friday)) && 
                 (offcheckBox.Checked))
             {
-                timer.Stop();
-                watchDogTimer.Stop();
-                Logger.Info("Автоматичне вимкнення комп'ютера.");
-                _timeToShutdown = true;
-                Application.Exit();
+                DialogResult dialog = new ShutdownForm().ShowDialog();
+                if (dialog == DialogResult.OK)
+                {
+                    //timer.Stop();
+                    watchDogTimer.Stop();
+                    Logger.Info("Автоматичне вимкнення комп'ютера.");
+                    _timeToShutdown = true;
+                    Application.Exit();
+                }
+                else
+                {
+                    offcheckBox.Checked = false;
+                }
             }
         }
 
@@ -510,5 +438,6 @@ namespace LazyBones
                 Logger.Error("Введена невірна IP адреса!");
             }
         }
+
     }
 }

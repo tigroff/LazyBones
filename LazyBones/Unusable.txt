@@ -1,0 +1,103 @@
+        //private void RandomizeTimer()
+        //{
+        //    timer.Interval = _rand.Next(240, 360) * 10000;
+        //    Logger.Info($"Наступне перепідключення через {timer.Interval / 60000} хвилин.");
+        //    timer.Start();
+        //}
+
+
+        //private void RdpConnect()
+        //{
+        //    try
+        //    {
+        //        Thread.Sleep(_rand.Next(2000, 5000));  //Decimal.ToInt32(sleepTime.Value) * 1000);
+        //        System.Diagnostics.Process.Start("mstsc.exe", Settings.Default.rdpPath);
+        //        Logger.Info("RDP під'єднано.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error(ex);
+        //    }
+        //}
+
+        //private void RdpDisconnect()
+        //{
+        //    try
+        //    {
+        //        foreach (Process proc in Process.GetProcessesByName("mstsc"))
+        //        {
+        //            proc.Kill();
+        //            Logger.Info("RDP від'єднано.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error(ex);
+        //    }
+        //}
+
+        //private void timer_Tick(object sender, EventArgs e)
+        //{ 
+        //    Logger.Info("Автоматичне перепідключення.");
+        //    timer.Stop();
+        //    if (CheckForInternetConnection())
+        //    {
+        //        if (!_connected)
+        //        {
+        //            _connected = Vpn.Connect();
+        //        }
+        //        Rdp.Disconnect();
+        //        Rdp.Connect(); 
+        //    }
+        //    //RandomizeTimer();
+        //    timer.Start();
+        //}
+
+        //private bool PingNet()
+        //{
+        //    Ping pingSender = new Ping();
+        //    try
+        //    {
+        //        PingReply reply = pingSender.Send("8.8.8.8", 1000);
+        //        if (reply.Status == IPStatus.Success && reply.RoundtripTime > 0)
+        //        {
+        //            _firstPingLog = true;
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            int _pingCount = 0;
+        //            for (int i = 0; i < 5; i++)
+        //            {
+        //                PingReply reply1 = pingSender.Send("8.8.8.8", 1000);
+        //                if (reply1.Status == IPStatus.Success && reply1.RoundtripTime > 0)
+        //                {
+        //                    return true;
+        //                }
+        //                else
+        //                {
+        //                    _pingCount++;
+        //                    Thread.Sleep(1000);
+        //                }
+        //            }
+
+        //            if (_firstPingLog && _pingCount >= 4)
+        //            {
+        //                Logger.Warn("Немає інтернету.");
+        //                _firstPingLog = false;
+        //                return false;
+        //            }
+        //            return false;
+        //        }
+        //    }
+        //    catch (PingException)
+        //    {
+        //        Logger.Error("Помилка мережевого з'єднання.");
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error(ex);
+        //        return false;
+        //    }
+        //}

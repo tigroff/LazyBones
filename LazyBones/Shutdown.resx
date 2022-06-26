@@ -117,64 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="notifyIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>97, 17</value>
+  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="notifyIcon.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAICAAAAAACACoCAAAFgAAACgAAAAgAAAAQAAAAAEACAAAAAAAAAAAAGAAAABgAAAAAAEAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQIACQkTAAwMGwAEBAoABQYDABQW
-        DAAVFwwADQ8IAAEBAQAFBQwAKSltADc3tgA3N8EANjbAABIRRAAhJgsAhZc2AIqcOACAkTcASVIlAAgJ
-        BQAiImwAKirUABoa0gAHB0oAIigDAISdGgCQpy0ARU4fAAYGEgAhIbEABwdLAHWIIwAMDQYABAQZABgY
-        uwB6kRoAERQEAAMDGQAXF7sAeZAYABATAwAQEwMAIikDACMpBACFnhoAJCsEACUsBACFnxoAAwMZABcX
-        vAAaGtMABwdLACYtBACFnxoAeZEYABATAwADAxgAFhaxABkZxgAHBkcAJSwEAH6WGQBziBcADxIDAAEB
-        CgAJBkkACgdUAAoHUwAKB1IAAwIeAA8TAgAyPgoAMz8KADE9CQAxPQkAMT0JADI/CgAzQAoALTgJAAYI
-        AQABBgcACis1AAsyPQALMTwAAxEUABEIAwA5HA0AOx0NADodDQA6HQ0AOh0NADodDQAzGQsABwMCAAUX
-        HQAmqtkALMP4ACvB9gArv/QADEJTAEIfCwDidDMA6Hc0AOh3NADpeDUAzGkuABsOBgAFGB4AKLDhAC3G
-        /QAMRVYARSAMAOp4NQDUbTAAHA4GAA1GVwBGIQwALcf+AA1HWQBIIgwA63k1ABwOBgAFFx0AKLDfAA1I
-        WgBJIwwA0mwwABsOBgADCw8AIpW+AA1JWwBKIwwAtFwoAA4HAwAQRVgAKLLkAA1JXABLIw0A7Hk1ANlv
-        MABWLBMAAQYHAA9BUgAehqsAIpW/ACKUvQAhlL0ACjdHADgbCQCvWScAslsoAKRUJQBSKhMABwQCAAAA
-        AQACCg0ABA8UAAEGCAAGAwEAEgkEABIJBAASCgQADQcDAAEBAAAcHNQAGhrUAImjGwCKpB0AGRnUABoa
-        1QCJpBsAGRnJAIKaGgCBmhkAgZkZAC3I/wDwezYA8Xs2AC3G/QDvejYA////AAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADCw8TExMTExMTExMTFxsfIyMjI
-        yMjIyMnKywAAAAAAtba3uLm5ubm5ubm5uru8vb6+vr6+vr6+vr/AwQAAAACur9rX19fX19fX19fXsLGy
-        2NjY2NjY2NjY27O0AAAAqKnX19fX19fX19fX152qq6DY2NjY2NjY2NjY2aytAACio9fX19fX19fX19fX
-        naSloNjY2NjY2NjY2NjYpqcAAJOU19fX19fX19fX19ednp+g2NjY2NjY2NjY2NiZoQAAk5TX19fX19fX
-        19fX15WbnJjY2NjY2NjY2NjY2JmaAACTlNfX19fX19fX19fXlZaXmNjY2NjY2NjY2NjYmZoAAJOU19fX
-        19fX19fX19eVlpeY2NjY2NjY2NjY2NiZmgAAk5TX19fX19fX19fX15WWl5jY2NjY2NjY2NjY2JmaAACT
-        lNfX19fX19fX19fXlZaXmNjY2NjY2NjY2NjYmZoAAJOU19fX19fX19fX19eVlpeY2NjY2NjY2NjY2NiZ
-        mgAAk5TX19fX19fX19fX15WWl5jY2NjY2NjY2NjY2JmaAACGh4iJiYmJiYmJiYmJiouMjY6Pj4+Pj4+P
-        j4+QkZIAAHh5enp6enp6enp6enp7fH1+f4CBgoODg4KBgH+EhQAAaGlqa2tra2tra2tra2xtbm9wb29x
-        cnJyc290dXZ3AABgYdPT09PT09PT09PTYmNkZdTV1dXW1tbW1dXUZmcAAFhZ0dHR0dHR0dHR0dFaW1xd
-        0tLS0tLS0tLS0tJeXwAATU7Nzc3Nzc3Nzc3NzT5GVlfOzs7Ozs7Ozs7Ozk9RAABNTs3Nzc3Nzc3Nzc3N
-        PkZVVM7Ozs7Ozs7Ozs7OT1EAAE1Ozc3Nzc3Nzc3Nzc0+RlNUzs7Ozs7Ozs7Ozs5PUQAATU7Nzc3Nzc3N
-        zc3NzT5GUkHOzs7Ozs7Ozs7Ozk9RAABNTs3Nzc3Nzc3Nzc3NPkZAQc7Ozs7Ozs7Ozs7OT1EAAE1Ozc3N
-        zc3Nzc3Nzc0+RkBBzs7Ozs7Ozs7Ozs5PUQAATU7Nzc3Nzc3Nzc3NzT5GQEHOzs7Ozs7Ozs7Ozk9QAABJ
-        Ss3Nzc3Nzc3Nzc3NPkZAQc7Ozs7Ozs7Ozs7OS0wAAERF0M3Nzc3Nzc3Nzc0+RkBBzs7Ozs7Ozs7Ozs5H
-        SAAAADw9zM3Nzc3Nzc3NzT4/QEHOzs7Ozs7Ozs7PQkMAAAAAMDEyMzMzMzMzMzMzNDU2Nzg4ODg4ODg4
-        ODk6OwAAAAAAJygpKSkpKSkpKSkpKissLS0tLS0tLS0tLi8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAP/////gAAAHwAAAA8AAAAOAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAA
-        AAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAA
-        AAHAAAADwAAAA+AAAAf/////
-</value>
-  </data>
-  <metadata name="watchDogTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>319, 16</value>
-  </metadata>
-  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>198, 12</value>
-  </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>11, 14</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>55</value>
-  </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAICAAAAAACACoCAAAFgAAACgAAAAgAAAAQAAAAAEACAAAAAAAAAAAAGAAAABgAAAAAAEAAAAA

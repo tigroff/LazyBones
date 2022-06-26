@@ -43,7 +43,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.watchDogTimer = new System.Windows.Forms.Timer(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -51,10 +50,10 @@
             this.offcheckBox = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
-            this.connectBox = new System.Windows.Forms.CheckBox();
             this.passBox = new System.Windows.Forms.TextBox();
             this.onTimePicker = new System.Windows.Forms.DateTimePicker();
             this.offTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.connectBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -191,11 +190,6 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
             // 
-            // timer
-            // 
-            this.timer.Interval = 3600000;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // watchDogTimer
             // 
             this.watchDogTimer.Interval = 10000;
@@ -253,19 +247,6 @@
             this.rtbLog.TabIndex = 15;
             this.rtbLog.Text = "";
             // 
-            // connectBox
-            // 
-            this.connectBox.AutoSize = true;
-            this.connectBox.Checked = global::LazyBones.Properties.Settings.Default.autoconnect;
-            this.connectBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "autoconnect", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.connectBox.Location = new System.Drawing.Point(246, 100);
-            this.connectBox.Name = "connectBox";
-            this.connectBox.Size = new System.Drawing.Size(158, 17);
-            this.connectBox.TabIndex = 16;
-            this.connectBox.Text = "Автоматичне підключення";
-            this.connectBox.UseVisualStyleBackColor = true;
-            this.connectBox.CheckedChanged += new System.EventHandler(this.connectBox_CheckedChanged);
-            // 
             // passBox
             // 
             this.passBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "password", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -299,6 +280,19 @@
             this.offTimePicker.Size = new System.Drawing.Size(71, 20);
             this.offTimePicker.TabIndex = 12;
             this.offTimePicker.Value = global::LazyBones.Properties.Settings.Default.offTime;
+            // 
+            // connectBox
+            // 
+            this.connectBox.AutoSize = true;
+            this.connectBox.Checked = global::LazyBones.Properties.Settings.Default.autoconnect;
+            this.connectBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LazyBones.Properties.Settings.Default, "autoconnect", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.connectBox.Location = new System.Drawing.Point(246, 100);
+            this.connectBox.Name = "connectBox";
+            this.connectBox.Size = new System.Drawing.Size(158, 17);
+            this.connectBox.TabIndex = 16;
+            this.connectBox.Text = "Автоматичне підключення";
+            this.connectBox.UseVisualStyleBackColor = true;
+            this.connectBox.CheckedChanged += new System.EventHandler(this.connectBox_CheckedChanged);
             // 
             // LazyBones
             // 
@@ -347,7 +341,6 @@
         private System.Windows.Forms.TextBox rdpPath;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox ipBox;
-        private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.CheckBox offcheckBox;
         private System.Windows.Forms.DateTimePicker offTimePicker;
         private System.Windows.Forms.Timer watchDogTimer;

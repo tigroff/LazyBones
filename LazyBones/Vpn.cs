@@ -14,12 +14,15 @@ namespace LazyBones
 {
     internal class Vpn
     {
-        private static readonly string _vpnPath = @"C:\Program Files\SoftEther VPN Client\vpncmd_x64.exe";
+        private static readonly string _vpnPath = new StringBuilder().Append(@"C:\Program Files\SoftEther VPN Client\")
+                                                                     .Append(Environment.Is64BitOperatingSystem ? "vpncmd_x64" : "vpncmd")
+                                                                     .Append(".exe").ToString();
         private static readonly string _vpnArg = new StringBuilder().Append("127.0.0.1 /CLIENT /IN:\"")
                     .Append(Path.GetDirectoryName(Application.ExecutablePath))
                     .Append(Path.DirectorySeparatorChar.ToString())
                     .Append("infile.txt\" /OUT:log.txt").ToString();
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        public static bool Connected { set; get; }
 
         private static void Execute(string[] lines)
         {
@@ -50,13 +53,15 @@ namespace LazyBones
                     };
                 Execute(lines);
                 Logger.Info("VPN під'єднано.");
-                return true;
+                Connected = true;
+                 
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message);
-                return false;
+                Connected = false;
             }
+            return Connected;
         }
 
         public static void Disconnect()
@@ -67,8 +72,7 @@ namespace LazyBones
             };
             Execute(lines);
             Logger.Info("VPN від'єднано.");
+            Connected = false;
         }
-
-
     }
 }
