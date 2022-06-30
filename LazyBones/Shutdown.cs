@@ -12,11 +12,11 @@ namespace LazyBones
 {
     public partial class ShutdownForm : Form
     {
-        private int counter = 30;
+        private int counter = 30;   
         
         private void LabelText()
         {
-            label1.Text = $"Автоматичне вимкнення компьютера через {counter.ToString()} секунд";
+            label1.Text = $"Автоматичне вимкнення компьютера через {counter} секунд";
         }
         
         public ShutdownForm()

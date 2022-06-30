@@ -30,6 +30,7 @@ namespace LazyBones
         private Random _rand = new Random();
         private int _rndMinute;
         private bool _timeToShutdown = false;
+        private bool _firstPingLog = true;
 
         protected override void WndProc(ref Message message)
         {
@@ -142,6 +143,21 @@ namespace LazyBones
             return true;    
         }
 
+        private string VersionLabel
+        {
+            get
+            {
+                if (ApplicationDeployment.IsNetworkDeployed)
+                {
+                    return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                }
+                else
+                {
+                    return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                }
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             _rndMinute = _rand.Next(1, 10);
@@ -182,7 +198,8 @@ namespace LazyBones
             config.AddRule(LogLevel.Info, LogLevel.Fatal, logfile);
             LogManager.Configuration = config;
 
-            Logger.Info($"ver.{Application.ProductVersion} © 2022 by tigroff");
+           // Logger.Info($"ver.{Application.ProductVersion} © 2022 by tigroff");
+            Logger.Info($"{Assembly.GetEntryAssembly().GetName().Name} v.{VersionLabel} © 2022 by tigroff");
             OffLogging();
 
             if (Settings.Default.token == String.Empty && CheckToken() == String.Empty)
@@ -227,7 +244,7 @@ namespace LazyBones
             LogManager.Shutdown();
             if (_timeToShutdown) 
             {
-                System.Diagnostics.Process.Start("shutdown", "/h /f");
+                Process.Start("shutdown", "/h /f");
             }
         }
 
@@ -277,11 +294,16 @@ namespace LazyBones
             {
                 using (var client = new WebClient())
                 using (client.OpenRead("http://google.com/generate_204"))
+                    _firstPingLog = true;
                     return true;
             }
             catch
             {
-                Logger.Warn("Немає інтернету.");
+                if (_firstPingLog)
+                {
+                    Logger.Warn("Немає інтернету.");
+                    _firstPingLog = false;
+                }
                 return false;
             }
         }
@@ -318,18 +340,20 @@ namespace LazyBones
                 (DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= (45 + _rndMinute) && DateTime.Now.DayOfWeek == DayOfWeek.Friday)) && 
                 (offcheckBox.Checked))
             {
+                watchDogTimer.Stop();
                 DialogResult dialog = new ShutdownForm().ShowDialog();
                 if (dialog == DialogResult.OK)
                 {
                     //timer.Stop();
-                    watchDogTimer.Stop();
                     Logger.Info("Автоматичне вимкнення комп'ютера.");
                     _timeToShutdown = true;
                     Application.Exit();
                 }
                 else
                 {
+                    Logger.Info("Автоматичне вимкнення скасовано.");
                     offcheckBox.Checked = false;
+                    watchDogTimer.Start();
                 }
             }
         }

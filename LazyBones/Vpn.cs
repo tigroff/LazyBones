@@ -29,7 +29,7 @@ namespace LazyBones
             try
             {
                 File.WriteAllLines("infile.txt", lines);
-                System.Diagnostics.Process.Start(_vpnPath, _vpnArg);
+                Process.Start(_vpnPath, _vpnArg);
             }
             catch (Exception ex)
             {

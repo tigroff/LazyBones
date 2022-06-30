@@ -15,7 +15,7 @@
       <Value Profile="(Default)">10.5.21.3</Value>
     </Setting>
     <Setting Name="rdpPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\UTN.rdp</Value>
+      <Value Profile="(Default)">C:\LazyBones\UTN.rdp</Value>
     </Setting>
     <Setting Name="offTime" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)">05/28/2022 17:00:00</Value>

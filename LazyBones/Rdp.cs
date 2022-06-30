@@ -25,7 +25,7 @@ namespace LazyBones
             try
             {
                 Thread.Sleep(_rand.Next(2000, 5000));  //Decimal.ToInt32(sleepTime.Value) * 1000);
-                System.Diagnostics.Process.Start("mstsc.exe", Settings.Default.rdpPath);
+                Process.Start("mstsc.exe", Settings.Default.rdpPath);
                 Logger.Info("RDP під'єднано.");
             }
             catch (Exception ex)

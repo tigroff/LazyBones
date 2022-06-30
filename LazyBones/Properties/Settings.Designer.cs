@@ -73,7 +73,7 @@ namespace LazyBones.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\UTN.rdp")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\LazyBones\\UTN.rdp")]
         public string rdpPath {
             get {
                 return ((string)(this["rdpPath"]));
