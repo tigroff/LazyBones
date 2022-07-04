@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -52,14 +53,16 @@ namespace LazyBones
                     $"AccountConnect {Settings.Default.vpnname}"
                     };
                 Execute(lines);
-                Logger.Info("VPN під'єднано.");
-                Connected = true;
-                 
+                Thread.Sleep(1000);
+                Connected = Utils.CheckIfVpnConnected();
+                if (Connected)
+                {
+                    Logger.Info("VPN під'єднано.");
+                }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message);
-                Connected = false;
             }
             return Connected;
         }

@@ -228,7 +228,7 @@ namespace LazyBones
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (CheckForInternetConnection())
+            if (Utils.CheckForInternetConnection())
             {
                 if (Rdp.Connected)
                 {
@@ -287,37 +287,17 @@ namespace LazyBones
             openFileDialog.ShowDialog();
             rdpPath.Text = openFileDialog.FileName;
         }
-
-        private bool CheckForInternetConnection()
-        {
-            try
-            {
-                using (var client = new WebClient())
-                using (client.OpenRead("http://google.com/generate_204"))
-                    _firstPingLog = true;
-                    return true;
-            }
-            catch
-            {
-                if (_firstPingLog)
-                {
-                    Logger.Warn("Немає інтернету.");
-                    _firstPingLog = false;
-                }
-                return false;
-            }
-        }
-
+        
         private void watchDogTimer_Tick(object sender, EventArgs e)
         {
-            if (CheckForInternetConnection() && connectBox.Checked)
+            if (Utils.CheckForInternetConnection() && connectBox.Checked)
             {
                 if (!Vpn.Connected)
                 {
                     Vpn.Connect();
-                    Rdp.Connect();
                     if (Vpn.Connected && this.WindowState == FormWindowState.Normal)
                     {
+                        Rdp.Connect();
                         MinimizeToTray();
                     }
                 }
