@@ -54,7 +54,7 @@ namespace LazyBones
                     };
                 Execute(lines);
                 Thread.Sleep(1000);
-                Connected = Utils.CheckIfVpnConnected();
+                Connected = Utils.CheckForConnection(Utils.Connections.SoftVpn);
                 if (Connected)
                 {
                     Logger.Info("VPN під'єднано.");

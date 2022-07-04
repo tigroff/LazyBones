@@ -24,13 +24,11 @@ namespace LazyBones
 {
     public partial class LazyBones : Form
     {
-        //https://1gai.ru/publ/525372-kak-nastroit-avtomaticheskoe-vkljuchenie-kompjutera-na-windows-i-macos.html
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         bool minimizedToTray;
-        private Random _rand = new Random();
+        private Random _random = new Random();
         private int _rndMinute;
         private bool _timeToShutdown = false;
-        private bool _firstPingLog = true;
 
         protected override void WndProc(ref Message message)
         {
@@ -160,7 +158,7 @@ namespace LazyBones
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _rndMinute = _rand.Next(1, 10);
+            _rndMinute = _random.Next(1, 10);
             Vpn.Connected = false;
             onTimePicker.Enabled = !oncheckBox.Checked;
             passBox.Enabled = !oncheckBox.Checked;
@@ -228,7 +226,7 @@ namespace LazyBones
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (Utils.CheckForInternetConnection())
+            if (Utils.CheckForConnection(Utils.Connections.Internet))
             {
                 if (Rdp.Connected)
                 {
@@ -290,7 +288,7 @@ namespace LazyBones
         
         private void watchDogTimer_Tick(object sender, EventArgs e)
         {
-            if (Utils.CheckForInternetConnection() && connectBox.Checked)
+            if (Utils.CheckForConnection(Utils.Connections.Internet) && connectBox.Checked)
             {
                 if (!Vpn.Connected)
                 {

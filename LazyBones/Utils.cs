@@ -12,32 +12,31 @@ namespace LazyBones
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static bool _firstPingLog = true;
-
-        public static bool CheckForInternetConnection()
-        {
-            try
-            {
-                using (var client = new WebClient())
-                using (client.OpenRead("http://google.com/generate_204"))
-                _firstPingLog = true;
-                return true;
-            }
-            catch
-            {
-                if (_firstPingLog)
-                {
-                    Logger.Warn("Немає інтернету.");
-                    _firstPingLog = false;
-                }
-                return false;
-            }
+        public enum Connections
+        { 
+            Internet, SoftVpn
         }
 
-        public static bool CheckIfVpnConnected()
+        public static bool CheckForConnection(Connections sw)
         {
+            string res = "Невідома помилка.";
             try
             {
-                Dns.GetHostEntry("softvpn.nafta.priv");
+                switch (sw)
+                {
+                    case Connections.Internet:
+                        using (var client = new WebClient())
+                        using (client.OpenRead("http://google.com/generate_204"))
+                            res = "Немає інтернету.";
+                        break;
+                    case Connections.SoftVpn:
+                        Dns.GetHostEntry("softvpn.nafta.priv");
+                        res = "Немає зв'язку з робочою мережею.";
+                        break;
+                    default:
+                        break;
+                }
+
                 _firstPingLog = true;
                 return true;
             }
@@ -45,13 +44,11 @@ namespace LazyBones
             {
                 if (_firstPingLog)
                 {
-                    Logger.Warn("Немає зв'язку з робочою мережею.");
+                    Logger.Warn(res);
                     _firstPingLog = false;
                 }
                 return false;
             }
-            
-        
         }
     }
 }
