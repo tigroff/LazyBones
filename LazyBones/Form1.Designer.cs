@@ -48,9 +48,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.oncheckBox = new System.Windows.Forms.CheckBox();
             this.offcheckBox = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
-            this.passBox = new System.Windows.Forms.TextBox();
             this.onTimePicker = new System.Windows.Forms.DateTimePicker();
             this.offTimePicker = new System.Windows.Forms.DateTimePicker();
             this.connectBox = new System.Windows.Forms.CheckBox();
@@ -228,15 +226,6 @@
             this.offcheckBox.UseVisualStyleBackColor = true;
             this.offcheckBox.CheckedChanged += new System.EventHandler(this.offcheckBox_CheckedChanged);
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 101);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(132, 13);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Пароль входу в Windows";
-            // 
             // rtbLog
             // 
             this.rtbLog.Location = new System.Drawing.Point(4, 123);
@@ -246,16 +235,6 @@
             this.rtbLog.Size = new System.Drawing.Size(479, 109);
             this.rtbLog.TabIndex = 15;
             this.rtbLog.Text = "";
-            // 
-            // passBox
-            // 
-            this.passBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::LazyBones.Properties.Settings.Default, "password", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.passBox.Location = new System.Drawing.Point(137, 98);
-            this.passBox.Name = "passBox";
-            this.passBox.Size = new System.Drawing.Size(100, 20);
-            this.passBox.TabIndex = 14;
-            this.passBox.Text = global::LazyBones.Properties.Settings.Default.password;
-            this.passBox.UseSystemPasswordChar = true;
             // 
             // onTimePicker
             // 
@@ -301,8 +280,6 @@
             this.ClientSize = new System.Drawing.Size(488, 235);
             this.Controls.Add(this.connectBox);
             this.Controls.Add(this.rtbLog);
-            this.Controls.Add(this.passBox);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.onTimePicker);
             this.Controls.Add(this.oncheckBox);
             this.Controls.Add(this.offTimePicker);
@@ -349,8 +326,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox passBox;
         private System.Windows.Forms.RichTextBox rtbLog;
         private System.Windows.Forms.CheckBox connectBox;
     }

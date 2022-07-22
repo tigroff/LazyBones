@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,39 +13,21 @@ namespace LazyBones
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static bool _firstPingLog = true;
-        public enum Connections
-        { 
-            Internet, SoftVpn
-        }
 
-        public static bool CheckForConnection(Connections sw)
+        public static bool CheckForConnection()
         {
-            string res = "Невідома помилка.";
             try
             {
-                switch (sw)
-                {
-                    case Connections.Internet:
-                        using (var client = new WebClient())
-                        using (client.OpenRead("http://google.com/generate_204"))
-                            res = "Немає інтернету.";
-                        break;
-                    case Connections.SoftVpn:
-                        Dns.GetHostEntry("softvpn.nafta.priv");
-                        res = "Немає зв'язку з робочою мережею.";
-                        break;
-                    default:
-                        break;
-                }
-
-                _firstPingLog = true;
+                using (var client = new WebClient())
+                using (client.OpenRead("http://google.com/generate_204"))
+                    _firstPingLog = true;
                 return true;
             }
             catch
             {
                 if (_firstPingLog)
                 {
-                    Logger.Warn(res);
+                    Logger.Warn("Немає інтернету.");
                     _firstPingLog = false;
                 }
                 return false;

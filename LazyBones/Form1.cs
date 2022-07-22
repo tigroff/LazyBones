@@ -44,84 +44,16 @@ namespace LazyBones
             InitializeComponent();
         }
 
-        public static DialogResult InputBox(string title, string promptText, ref string value)
-        {
-            Form form = new Form();
-            Label label = new Label();
-            TextBox textBox = new TextBox();
-            Button buttonOk = new Button();
-            Button buttonCancel = new Button();
-
-            form.Text = title;
-            label.Text = promptText;
-            textBox.Text = value;
-
-            buttonOk.Text = "OK";
-            buttonCancel.Text = "Відміна";
-            buttonOk.DialogResult = DialogResult.OK;
-            buttonCancel.DialogResult = DialogResult.Cancel;
-
-            label.SetBounds(9, 15, 372, 13);
-            textBox.SetBounds(12, 36, 372, 20);
-            buttonOk.SetBounds(228, 72, 75, 23);
-            buttonCancel.SetBounds(309, 72, 75, 23);
-
-            label.AutoSize = true;
-            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
-            buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-
-            form.ClientSize = new Size(396, 107);
-            form.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
-            form.ClientSize = new Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
-            form.FormBorderStyle = FormBorderStyle.FixedDialog;
-            form.StartPosition = FormStartPosition.CenterScreen;
-            form.MinimizeBox = false;
-            form.MaximizeBox = false;
-            form.AcceptButton = buttonOk;
-            form.CancelButton = buttonCancel;
-
-            DialogResult dialogResult = form.ShowDialog();
-            value = textBox.Text;
-            return dialogResult;
-        }
-
         private string CheckToken()
         {
-            string value = "Введіть ключ";
-            if ((InputBox("Введіть токен ключа для VPN з'єднання", "Токен:", ref value) == DialogResult.OK) && (value.Length >= 26))
+            string value = InputForm("Введіть токен ключа для VPN з'єднання", "Токен VPN з'єднання", false);
+
+            if (!String.IsNullOrEmpty(value) && value.Length >= 26)
             {
                 Settings.Default.token = value;
             }
             else Settings.Default.token = String.Empty;
             return Settings.Default.token;
-        }
-
-        private string LogFile()
-        {
-            string path = @"C:\LazyBones";
-            DriveInfo[] allDrives = DriveInfo.GetDrives();
-
-            foreach (DriveInfo d in allDrives)
-            {
-                if (d.Name.IndexOf("C:") == 0 && d.IsReady && d.DriveType == DriveType.Fixed)
-                {
-                    if (!Directory.Exists(path))
-                    {
-                        try
-                        {
-                            Directory.CreateDirectory(path);
-                        }
-                        catch (Exception)
-                        {
-                            Logger.Error("Не можливо створити теку для log файлу, використовується тека за замовчуванням.");
-                            return "LazyBones.log";
-                        }
-                    }
-                    return Path.Combine(path, "LazyBones.log");
-                }
-            }
-            return "LazyBones.log";
         }
 
         private bool AllFieldsIsFull()
@@ -159,14 +91,12 @@ namespace LazyBones
         private void Form1_Load(object sender, EventArgs e)
         {
             _rndMinute = _random.Next(1, 10);
-            Vpn.Connected = false;
             onTimePicker.Enabled = !oncheckBox.Checked;
-            passBox.Enabled = !oncheckBox.Checked;
 
             var config = new NLog.Config.LoggingConfiguration();
             var logfile = new NLog.Targets.FileTarget("logfile")
             {
-                FileName = LogFile(),
+                FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"LazyBones.log"),
                 Layout = "${date:format=dd-MM-yyyy HH\\:mm\\:ss} - ${level} - ${message}",
                 AutoFlush = true,
                 Encoding = Encoding.GetEncoding("windows-1251"),
@@ -211,7 +141,6 @@ namespace LazyBones
 
             if (AllFieldsIsFull())
             {
-                //RandomizeTimer();
                 Logger.Info("Чекаємо на SoftEther.");
 
                 while (!Process.GetProcessesByName(Environment.Is64BitOperatingSystem ? "vpnclient_x64" : "vpnclient").Any())
@@ -220,13 +149,12 @@ namespace LazyBones
                 }
                 Logger.Info("SoftEther готовий до роботи.");
                 watchDogTimer.Start();
-                //timer.Start();
             }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (Utils.CheckForConnection(Utils.Connections.Internet))
+            if (Utils.CheckForConnection())
             {
                 if (Rdp.Connected)
                 {
@@ -282,20 +210,24 @@ namespace LazyBones
 
         private void button1_Click(object sender, EventArgs e)
         {
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             openFileDialog.ShowDialog();
             rdpPath.Text = openFileDialog.FileName;
         }
         
         private void watchDogTimer_Tick(object sender, EventArgs e)
         {
-            if (Utils.CheckForConnection(Utils.Connections.Internet) && connectBox.Checked)
+            if (Utils.CheckForConnection() && connectBox.Checked)
             {
                 if (!Vpn.Connected)
                 {
                     Vpn.Connect();
-                    if (Vpn.Connected && this.WindowState == FormWindowState.Normal)
+                }
+                else if (!Rdp.Connected)
+                { 
+                    Rdp.Connect();
+                    if (this.WindowState == FormWindowState.Normal)
                     {
-                        Rdp.Connect();
                         MinimizeToTray();
                     }
                 }
@@ -308,12 +240,7 @@ namespace LazyBones
                     Vpn.Disconnect();
                 }
             }
-            if (Vpn.Connected && !Rdp.Connected)
-            {
-                Rdp.Connect();
-            }
 
-            //todo окно отмены выключения компьютера 
             if (((DateTime.Now.Hour >= offTimePicker.Value.Hour && DateTime.Now.Minute >= (offTimePicker.Value.Minute + _rndMinute)) || 
                 (DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= (45 + _rndMinute) && DateTime.Now.DayOfWeek == DayOfWeek.Friday)) && 
                 (offcheckBox.Checked))
@@ -322,7 +249,6 @@ namespace LazyBones
                 DialogResult dialog = new ShutdownForm().ShowDialog();
                 if (dialog == DialogResult.OK)
                 {
-                    //timer.Stop();
                     Logger.Info("Автоматичне вимкнення комп'ютера.");
                     _timeToShutdown = true;
                     Application.Exit();
@@ -339,42 +265,45 @@ namespace LazyBones
         private void oncheckBox_CheckedChanged(object sender, EventArgs e)
         {
             onTimePicker.Enabled = !oncheckBox.Checked;
-            passBox.Enabled = !oncheckBox.Checked;
             const string taskName = "WakeUp and Work";
             
             using (TaskService ts = new TaskService())
             {
                 if (oncheckBox.Checked)
                 {
-                    // Create a new task definition and assign properties
-                    TaskDefinition td = TaskService.Instance.NewTask();
+                    string password = InputForm("Введіть пароль входу в Windows:", "Введіть пароль", true);
 
-                    td.RegistrationInfo.Description = "LazyBones task";
-                    td.Principal.LogonType = TaskLogonType.Password;
-                    td.Principal.UserId = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                    td.Settings.WakeToRun = true;
-
-                    td.Triggers.Add(new WeeklyTrigger
+                    if (!String.IsNullOrEmpty(password))
                     {
-                        StartBoundary = DateTime.Today
-                      + TimeSpan.FromHours(onTimePicker.Value.Hour) + TimeSpan.FromMinutes(onTimePicker.Value.Minute),
-                        DaysOfWeek = DaysOfTheWeek.Monday | DaysOfTheWeek.Tuesday | DaysOfTheWeek.Wednesday | DaysOfTheWeek.Thursday | DaysOfTheWeek.Friday
-                    });
+                        // Create a new task definition and assign properties
+                        TaskDefinition td = TaskService.Instance.NewTask();
 
-                    // Add an action that will launch Notepad whenever the trigger fires
-                    td.Actions.Add(new ExecAction(Application.ExecutablePath));
+                        td.RegistrationInfo.Description = "LazyBones task";
+                        td.Principal.LogonType = TaskLogonType.Password;
+                        td.Principal.UserId = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                        td.Settings.WakeToRun = true;
 
-                    // Register the task in the root folder
-                    try
-                    {
-                        TaskService.Instance.RootFolder.RegisterTaskDefinition(taskName, td, TaskCreation.CreateOrUpdate, td.Principal.UserId, passBox.Text, TaskLogonType.Password);
+                        td.Triggers.Add(new WeeklyTrigger
+                        {
+                            StartBoundary = DateTime.Today
+                          + TimeSpan.FromHours(onTimePicker.Value.Hour) + TimeSpan.FromMinutes(onTimePicker.Value.Minute),
+                            DaysOfWeek = DaysOfTheWeek.Monday | DaysOfTheWeek.Tuesday | DaysOfTheWeek.Wednesday | DaysOfTheWeek.Thursday | DaysOfTheWeek.Friday
+                        });
 
-                    }
-                    catch (Exception ex)
-                    {
-                        oncheckBox.Checked = false;
-                        Logger.Error(ex.Message);
-                        MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // Add an action that will launch Notepad whenever the trigger fires
+                        td.Actions.Add(new ExecAction(Application.ExecutablePath));
+
+                        // Register the task in the root folder
+                        try
+                        {
+                            TaskService.Instance.RootFolder.RegisterTaskDefinition(taskName, td, TaskCreation.CreateOrUpdate, td.Principal.UserId, password, TaskLogonType.Password);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            oncheckBox.Checked = false;
+                            Logger.Error(ex.Message);
+                        } 
                     }
                 }
                 else
@@ -390,9 +319,28 @@ namespace LazyBones
             }
         }
 
+        private string InputForm(string label1, string text, bool passchar)
+        {
+            string value = String.Empty;
+            InputForm form = new InputForm();
+            form.label1.Text = label1;
+            form.Text = text;
+            form.textBox1.UseSystemPasswordChar = passchar;
+
+            DialogResult dialogResult = form.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                value = form.textBox1.Text;
+            }
+            return value;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
-            CheckToken();
+            if (!String.IsNullOrEmpty(CheckToken()))
+            {
+                Logger.Error("Робота без токена двуфакторної аутентифікації неможлива! Зверніться до системного адміністратора.");
+            }
         }
 
         private void OffLogging() 

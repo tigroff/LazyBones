@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,21 @@ namespace LazyBones
                     .Append(Path.DirectorySeparatorChar.ToString())
                     .Append("infile.txt\" /OUT:log.txt").ToString();
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        public static bool Connected { set; get; }
+        static bool _connected = false;
+        public static bool Connected => _connected;
+
+        static Vpn()
+        {
+            NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChangedCallback);
+        }
+        
+        static void AddressChangedCallback(object sender, EventArgs e)
+        {
+                _connected = NetworkInterface.GetAllNetworkInterfaces()
+                    .Where(i => i.Name.Contains("VPN"))
+                    .Select(o => o.OperationalStatus)
+                    .FirstOrDefault() == OperationalStatus.Up;
+        }
 
         private static void Execute(string[] lines)
         {
@@ -38,7 +53,7 @@ namespace LazyBones
             }
         }
 
-        public static bool Connect()
+        public static void Connect()
         {
             try
             {
@@ -48,23 +63,17 @@ namespace LazyBones
                 temp = temp.Substring(temp.Length - 4, 4);
                 string[] lines =
                     {
-                    $"AccountUsernameSet Ukrtatnafta /USERNAME:{Settings.Default.user}",
-                    $"AccountPasswordSet Ukrtatnafta /PASSWORD:{temp}{totp.ComputeTotp()} /TYPE:radius",
+                    $"AccountUsernameSet {Settings.Default.vpnname} /USERNAME:{Settings.Default.user}",
+                    $"AccountPasswordSet {Settings.Default.vpnname} /PASSWORD:{temp}{totp.ComputeTotp()} /TYPE:radius",
                     $"AccountConnect {Settings.Default.vpnname}"
                     };
                 Execute(lines);
-                Thread.Sleep(1000);
-                Connected = Utils.CheckForConnection(Utils.Connections.SoftVpn);
-                if (Connected)
-                {
-                    Logger.Info("VPN під'єднано.");
-                }
+                Logger.Info("Під'єднуємо VPN.");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message);
             }
-            return Connected;
         }
 
         public static void Disconnect()
@@ -74,8 +83,7 @@ namespace LazyBones
                $"AccountDisconnect {Settings.Default.vpnname}"
             };
             Execute(lines);
-            Logger.Info("VPN від'єднано.");
-            Connected = false;
+            Logger.Info("Від'єднуємо VPN.");
         }
     }
 }

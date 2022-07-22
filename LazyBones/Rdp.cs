@@ -13,7 +13,6 @@ namespace LazyBones
     internal class Rdp
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static Random _rand = new Random();
 
         public static bool Connected
         {
@@ -24,9 +23,8 @@ namespace LazyBones
         {
             try
             {
-                Thread.Sleep(_rand.Next(2000, 5000));  //Decimal.ToInt32(sleepTime.Value) * 1000);
                 Process.Start("mstsc.exe", Settings.Default.rdpPath);
-                Logger.Info("RDP під'єднано.");
+                Logger.Info("Під'єднуємо RDP.");
             }
             catch (Exception ex)
             {
@@ -40,7 +38,7 @@ namespace LazyBones
                 foreach (Process proc in Process.GetProcessesByName("mstsc"))
                 {
                     proc.Kill();
-                    Logger.Info("RDP від'єднано.");
+                    Logger.Info("Від'єднуємо RDP.");
                 }
             }
             catch (Exception ex)
